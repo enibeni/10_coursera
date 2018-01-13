@@ -16,7 +16,7 @@ def get_courses_list(courses_amount, keyword=None):
         ]
     else:
         courses_list = [
-            url.text for url in urls if "python" in url.text
+            url.text for url in urls if keyword in url.text
         ]
     return courses_list
 
@@ -25,8 +25,8 @@ def get_course_info(course_url):
     response = requests.get(course_url)
 
     soup = BeautifulSoup(response.text, "html.parser")
-    name = soup.find("h1", {"class": "title display-3-text"}).text
-    print_progress_status(name)
+    course_name = soup.find("h1", {"class": "title display-3-text"}).text
+    print_progress_status(course_name)
     lang = soup.find("div", class_="rc-Language").text
     start_date = soup.find(
         "div", class_="startdate rc-StartDateString caption-text").text
@@ -37,7 +37,7 @@ def get_course_info(course_url):
             "div", class_="ratings-text bt3-visible-xs").text
     else:
         raiting = None
-    return {"Course name": name,
+    return {"Course name": course_name,
             "Language": lang,
             "Start date": start_date,
             "Average raiting": raiting,
@@ -45,8 +45,8 @@ def get_course_info(course_url):
             "URL": course_url}
 
 
-def print_progress_status(name):
-    print("gathering info about course: {}".format(name))
+def print_progress_status(course_name):
+    print("gathering info about course: {}".format(course_name))
 
 
 def output_courses_info_to_xlsx(filepath, courses_info):
@@ -66,12 +66,14 @@ def output_courses_info_to_xlsx(filepath, courses_info):
             course["URL"],
         ]
         ws.append(course_row)
+    if filepath is None:
+        filepath = "courses.xlsx"
     wb.save(filename=filepath)
 
 
 def get_input_argument_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--file', required=True,
+    parser.add_argument('-f', '--file', required=False,
                         help='Path to output Excel .xlsx file')
     parser.add_argument('-k', '--keyword', required=False,
                         help='find courses with a particular keyword')

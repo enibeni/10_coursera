@@ -13,8 +13,9 @@ pip install -r requirements.txt
 # Quickstart
 
 Run this script with Python 3.x. 
-As a parameter you have to specify path to .xlsx file for saving results.
-As an optional parameter, you can specify the keyword that the courses will be searched for.
+As an optional parameter you could specify path to .xlsx file for saving results. 
+By default results will be saved in working directory.
+As an another optional parameter, you can specify the keyword that the courses will be searched for.
 
 Example of script launch on Linux, Python 3.5:
 
