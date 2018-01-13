@@ -1,6 +1,34 @@
 # Coursera Dump
 
-[TODO. There will be project description]
+Find interesting courses from coursera. 
+Get list of 20 random courses or find courses you want by a keyword.
+
+# Set up
+
+Use pip to intall dependencies
+```bash
+pip install -r requirements.txt
+```
+
+# Quickstart
+
+Run this script with Python 3.x. 
+As a parameter you have to specify path to .xlsx file for saving results.
+As an optional parameter, you can specify the keyword that the courses will be searched for.
+
+Example of script launch on Linux, Python 3.5:
+
+```bash
+$ python coursera.py -f <path to file> -k python
+
+Output:
+gathering info about course: Python Programming Essentials
+gathering info about course: Python Data Visualization
+gathering info about course: Python Data Structures
+gathering info about course: Applied Text Mining in Python
+...
+```
+
 
 # Project Goals
 
