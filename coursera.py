@@ -12,7 +12,7 @@ def get_courses_list(courses_amount, keyword=None):
     urls = soup.find_all("loc")
     if keyword is None:
         courses_list = [
-            random.choice(urls).text for i in range(courses_amount)
+            random.choice(urls).text for range_index in range(courses_amount)
         ]
     else:
         courses_list = [
