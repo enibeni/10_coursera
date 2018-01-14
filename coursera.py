@@ -19,9 +19,11 @@ def get_courses_urls_list(courses_xml_feed, courses_amount, keyword=None):
 
 def get_course_info(course_page, course_url):
     soup = BeautifulSoup(course_page, "html.parser")
-    course_name = soup.find("h1", {"class": "title display-3-text"}).text
+    course_name = soup.find(
+        "h1", class_="title display-3-text").text
     print_progress_status(course_name)
-    lang = soup.find("div", class_="rc-Language").text
+    lang = soup.find(
+        "div", class_="rc-Language").text
     start_date = soup.find(
         "div", class_="startdate rc-StartDateString caption-text").text
     duration = len(soup.find_all("div", class_="week"))
