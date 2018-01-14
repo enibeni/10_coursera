@@ -5,26 +5,20 @@ import argparse
 import random
 
 
-def get_courses_list(courses_amount, keyword=None):
-    response = requests.get(
-        "https://www.coursera.org/sitemap~www~courses.xml")
-    soup = BeautifulSoup(response.content, "xml")
+def get_courses_urls_list(courses_xml_feed, courses_amount, keyword=None):
+    soup = BeautifulSoup(courses_xml_feed, "xml")
     urls = soup.find_all("loc")
     if keyword is None:
-        courses_list = [
-            random.choice(urls).text for range_index in range(courses_amount)
-        ]
+        courses_urls_ist = [random.choice(urls).text
+                        for range_index in range(courses_amount)]
     else:
-        courses_list = [
-            url.text for url in urls if keyword in url.text
-        ]
-    return courses_list
+        courses_urls_ist = [url.text for url in urls
+                        if keyword in url.text]
+    return courses_urls_ist
 
 
-def get_course_info(course_url):
-    response = requests.get(course_url)
-
-    soup = BeautifulSoup(response.text, "html.parser")
+def get_course_info(course_page, course_url):
+    soup = BeautifulSoup(course_page, "html.parser")
     course_name = soup.find("h1", {"class": "title display-3-text"}).text
     print_progress_status(course_name)
     lang = soup.find("div", class_="rc-Language").text
@@ -45,29 +39,36 @@ def get_course_info(course_url):
             "URL": course_url}
 
 
+def send_get_request(url):
+    response = requests.get(url).content.decode('utf-8')
+    return response
+
+
 def print_progress_status(course_name):
     print("gathering info about course: {}".format(course_name))
 
 
-def output_courses_info_to_xlsx(filepath, courses_info):
-    wb = Workbook()
-    ws = wb.active
-    table_title = [
-        'Course name', 'Language', 'Start date', 'Rating', 'Duration (week)',
-    ]
-    ws.append(table_title)
+def get_courses_data_to_write(courses_info):
+    table_title = ['Course name', 'Language', 'Start date',
+                   'Rating', 'Duration (week)', "URL"]
+    courses_data = [table_title]
     for course in courses_info:
-        course_row = [
+        courses_data.append([
             course["Course name"],
             course["Language"],
             course["Start date"],
             course["Average raiting"],
             course["Duration"],
             course["URL"],
-        ]
+        ])
+    return courses_data
+
+
+def write_data_to_xlsx(filepath, courses_list):
+    wb = Workbook()
+    ws = wb.active
+    for course_row in courses_list:
         ws.append(course_row)
-    if filepath is None:
-        filepath = "courses.xlsx"
     wb.save(filename=filepath)
 
 
@@ -85,11 +86,17 @@ if __name__ == "__main__":
     parser = get_input_argument_parser()
     args = parser.parse_args()
     filepath = args.file
+    if filepath is None:
+        filepath = "courses.xlsx"
     keyword = args.keyword
-    courses_list = get_courses_list(courses_amount, keyword)
+
+    courses_xml_feed = send_get_request("https://www.coursera.org/sitemap~www~courses.xml")
+    courses_urls_list = get_courses_urls_list(courses_xml_feed, courses_amount, keyword)
     courses_info = []
-    for course in courses_list:
-        courses_info.append(get_course_info(course))
-    output_courses_info_to_xlsx(filepath, courses_info)
+    for url in courses_urls_list:
+        course_page = send_get_request(url)
+        courses_info.append(get_course_info(course_page, url))
+    courses_data = get_courses_data_to_write(courses_info)
+    write_data_to_xlsx(filepath, courses_data)
 
 
