@@ -27,16 +27,16 @@ def get_course_info(course_page, course_url):
     start_date = soup.find(
         "div", class_="startdate rc-StartDateString caption-text").text
     duration = len(soup.find_all("div", class_="week"))
-    raiting_div = soup.find("div", class_="ratings-text bt3-visible-xs")
-    if raiting_div:
-        raiting_value = raiting_div.text
+    rating_div = soup.find("div", class_="ratings-text bt3-visible-xs")
+    if rating_div:
+        rating_value = rating_div.text
     else:
-        raiting_value = None
+        rating_value = None
     return {
         "Course name": course_name,
         "Language": lang,
         "Start date": start_date,
-        "Average raiting": raiting_value,
+        "Average raiting": rating_value,
         "Duration": duration,
         "URL": course_url
     }
