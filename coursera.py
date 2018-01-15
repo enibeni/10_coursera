@@ -79,17 +79,17 @@ def save_xlsx_file(filepath, wb):
 def get_input_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '-f',
-        '--file',
+        "-f",
+        "--file",
         required=False,
         default="courses.xlsx",
-        help='Path to output Excel .xlsx file'
+        help="Path to output Excel .xlsx file"
     )
     parser.add_argument(
-        '-k',
-        '--keyword',
+        "-k",
+        "--keyword",
         required=False,
-        help='find courses with a particular keyword'
+        help="find courses with a particular keyword"
     )
     return parser
 
