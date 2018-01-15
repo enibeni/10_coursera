@@ -55,8 +55,8 @@ def get_xlsx_document_container(courses_info):
     workbook = Workbook()
     ws = workbook.active
     table_title = [
-        'Course name', 'Language', 'Start date',
-        'Rating', 'Duration (week)', "URL"
+        "Course name", "Language", "Start date",
+        "Rating", "Duration (week)", "URL"
     ]
     ws.append(table_title)
     for course in courses_info:
